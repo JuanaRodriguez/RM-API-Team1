@@ -6,7 +6,7 @@ Framework from scratch
 WHAT IS IT?
 ------------
 
-  JAJED project based in JavaScript language, 
+JAJED project based in JavaScript language, 
 Is a project oriented to test the different endpoints of RoomManager appplication, 
 through its Representational State Transfer(REST) API. 
 
@@ -26,6 +26,7 @@ ENVIRONMENT
 -----------
 
 Microsoft Exchange 2010 SP3
+
 	- Windows Server 2008 R2
 	- IIS 7 or latter with compatibility IIS6
 	- .NET Framework 3.5
@@ -34,6 +35,7 @@ Microsoft Exchange 2010 SP3
 	- DNS
 
 RoomManager
+
 	- Windows Server 2008 R2
 	- MongoDB
 	- NodeJS

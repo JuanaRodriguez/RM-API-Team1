@@ -50,7 +50,7 @@ describe ('Rooms Acceptance Test', function(){
 
 	it('GET /rooms/{roomId} Random', function(done){					
 		if(expect(arrayRoom.length).to.be.at.least(minimumRoom)){							
-			roomUnderTest = Math.floor(Math.random() * (arrayRoom.length - 1)) + 1;				
+			roomUnderTest = Math.floor(Math.random() * (arrayRoom.length - 1)) + 1;			
 			room.getRoomByIdRandom(roomUnderTest, function(err, res){					
 				expect(res.body._id).to.equal(arrayRoom[roomUnderTest]._id);
 				expect(res.body.emailAddress).to.equal(arrayRoom[roomUnderTest].emailAddress);

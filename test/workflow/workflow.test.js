@@ -1,5 +1,7 @@
 var expect = require('chai').expect;
 var randomstring = require("randomstring");
+var moment = require("moment");
+var randomstring = require("randomstring");
 /**Manager*/
 var requireManager = require('../../lib/manager_lib/requireManagerLib.js');
 var endPointManager = requireManager.getRequireEndPoinManager();
@@ -7,12 +9,13 @@ var resourceManager = requireManager.getRequireResourceManager();
 /**Variables*/
 var config = requireManager.getRequireConfig();
 var service = endPointManager.getService();
-var rooms = endPointManager.getRoom();
+var room = endPointManager.getRoom();
+var constant = resourceManager.getConstantVariables();
+var outOfOrderValues = resourceManager.getOutOfOrdersValues();
 var meeting = endPointManager.getMeeting();
 var outOfOrder = endPointManager.getOutOfOrder();
 var location = endPointManager.getLocation();
 var resource = endPointManager.getResource();
-var room = resourceManager.getRoom();
 var resources = resourceManager.getResources();
 var status = resourceManager.getStatus();
 
@@ -32,36 +35,34 @@ Scenario : Verify the Workflow.
 describe('Workflow Test', function () {
 	context('Verify the Workflow. ',function(){
 	this.timeout(config.timeout);
+	var nameOutOfOrders = outOfOrderValues.title + randomstring.generate({ length: 6, charset: 'alphabetic'});
 	var name= resources.resourname + randomstring.generate({ length: 6, charset: 'alphabetic'});
-	var index = 0;
 	var Room = {};
-	var OutOfOrder = {};
 	var resourceJson = {};
 	var locationJson = {};
 	var outOfOrdersJson = {};
-	var Location = {};
 	var Service = {};
-	var withPath = 0;
 
 	it('Given I get a \'Service\'',function(done){
-		service.get(function(err,res){
-			Service = res.body[index];
-     	    expect(res.status).to.equal(status.OK);
+		service.getOneServiceExistent(function(oneService){
+			Service = oneService;
             done();
 		});
 	});
 		it('And I get a \'Room\'',function(done){
-			Room = room[index];
-			done();
+			room.getOneRoomExistent(function(oneRoom){
+				Room =  oneRoom;
+				done();
+			});
 		});
 
 	it('When I create an \'out-of-order\' in the \'room\'',function(done){
 		outOfOrdersJson = {
-			roomId : Room.id,
-			from : "2017-09-03T22:30:00.000Z",
-			to : "2017-09-03T23:00:00.000Z",
-			title : "New OutOfOrder Test",
-			sendEmail : true
+			roomId : Room._id,
+			from : moment().add(constant.ADDFROM, 'hours').utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+			to : moment().add(constant.ADDTO, 'hours').utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+			title : nameOutOfOrders,
+			sendEmail : outOfOrderValues.sendEmail
 		};
 		outOfOrder.create(outOfOrdersJson, function(err,res){
 			outOfOrdersJson = res.body;
@@ -97,11 +98,13 @@ describe('Workflow Test', function () {
 			});
 
 	it('Then I assigned the \'location\' and \'resource\' to the room',function(done){
-		var json = { locationId : locationJson._id, resources : [resourceJson]};
-        rooms.update(json, function (err, res) {
-            expect(res.status).to.equal(200);
-            done();
-        });
+		room.getRooms(function(err,res){
+			var json = {locationId : locationJson._id, resources : [resourceJson]};
+        	room.update(json, function (err, res) {
+	            expect(res.status).to.equal(status.OK);
+	            done();
+        	});
+		});
 	});
 
 		it('And I delete all',function(done) {
