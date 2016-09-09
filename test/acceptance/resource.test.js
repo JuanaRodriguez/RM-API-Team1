@@ -53,12 +53,8 @@ describe ('Resources Aceptance Test', function () {
 	it('GET /resources/{resourceId}', function(done) {
 		resource.getById(resJson._id, function(err, res) {
 			expect(res.status).to.equal(status.OK);
-			expect(res.body.name).to.equal(resourceJson.name);
 			expect(res.body.__v).to.equal(__v);
-			expect(res.body.customName).to.equal(resourceJson.customName);
-			expect(res.body.fontIcon).to.equal(resourceJson.fontIcon);
-			expect(res.body.from).to.equal(resourceJson.from);
-			expect(res.body.description).to.equal(resourceJson.description);
+			expect(resource.compare(res.body, resourceJson)).to.equal(true);
 			done();
 		});
 	});
@@ -74,29 +70,19 @@ describe ('Resources Aceptance Test', function () {
 		resource.update(resJson._id, resourceJsonUpdate, function(err, res) {
 			expect(res.status).to.equal(status.OK);
 			expect(res.body.__v).to.equal(__v);
-			expect(res.body.name).to.equal(resourceJsonUpdate.name);
-			expect(res.body.customName).to.equal(resourceJsonUpdate.customName);
-			expect(res.body.fontIcon).to.equal(resourceJsonUpdate.fontIcon);
-			expect(res.body.from).to.equal(resourceJsonUpdate.from);
-			expect(res.body.description).to.equal(resourceJsonUpdate.description);
+			expect(resource.compare(res.body, resourceJsonUpdate)).to.equal(true);
 			done();
 		});
 	})
 
-});
 
-describe ('Resources Aceptance Test', function(){
-	
-	this.timeout(config.timeout);
-	var resourceJson={};
-	var name= resources.resourname + randomstring.generate({ length: 6, charset: 'alphabetic'});
-	var resJson={};
-	var __v = 0;
 
+
+	var resourceName= resources.resourname + randomstring.generate({ length: 6, charset: 'alphabetic'});
 
 	it('POST /resources',function(done){
 		resourceJson = {
-			name : name,
+			name : resourceName,
 			customName : resources.resourcusname,
 			fontIcon: resources.resourfonticon,
   			from: resources.resourfrom,
@@ -106,53 +92,21 @@ describe ('Resources Aceptance Test', function(){
 		resource.create (resourceJson, function(err,res){
 			expect(res.status).to.equal(status.OK);
 			expect(res.body.__v).to.equal(__v);
-			expect(res.body.name).to.equal(resourceJson.name);
-			expect(res.body.customName).to.equal(resourceJson.customName);
-			expect(res.body.fontIcon).to.equal(resourceJson.fontIcon);
-			expect(res.body.from).to.equal(resourceJson.from);
-			expect(res.body.description).to.equal(resourceJson.description);
-			resJson = res.body;
+			expect(resource.compare(res.body, resourceJson)).to.equal(true);			
+			resourceId=res.body._id;
 			done();
 		});
 	});
 
-	after(function(done){
-		resource.delete(resJson._id, function(err, res) {
-			expect(res.status).to.equal(status.OK);
-			done();
-		});
-	});
-});
-
-describe ('Resources Aceptance Test', function(){
-	this.timeout(config.timeout);
-	var resourceJson = {};
-	var name = resources.resourname + randomstring.generate({ length: 6, charset: 'alphabetic'});
-	
-
-	before(function(done){
-		resourceJson = {
-			name: name,
-			customName:resources.resourcusname,
-			fontIcon: resources.resourfonticon,
-  			from: resources.resourfrom,
-			description: resources.resourdesc
-		};
-		resource.create (resourceJson, function(err,res){
-			expect(res.status).to.equal(status.OK);
-			resourceJson = res.body;
-			done();
-		});
-	});
 
 	it('DELETE /resources/{resourceId}',function(done){
-		resource.delete(resourceJson._id, function(err, res) {
+		resource.delete(resourceId, function(err, res) {
 			expect(res.status).to.equal(status.OK);
 
-			resource.getById(resourceJson._id, function(err,res){
+			resource.getById(resourceId, function(err,res){
 				expect(res.status).to.equal(status.NOT_FOUND);
 				expect(res.body.code).to.equal('NotFoundError');
-				expect(res.body.message).to.equal('Resource resource('+ resourceJson._id + '), was not found');
+				expect(res.body.message).to.equal('Resource resource('+ resourceId + '), was not found');
 				done();
 			});
 		});

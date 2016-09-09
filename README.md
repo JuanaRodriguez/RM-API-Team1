@@ -15,13 +15,6 @@ THE LATEST VERSION
 
 Details of the latest version can be found in Github repository page: https://github.com/JFVF/RM-API-Team1
 
-REQUIREMENTS
-------------
-
-To install the required dependencies for the framework, it is necessary to be in the path of the project, and execute the following command.
-
-npm install
-
 ENVIRONMENT
 -----------
 
@@ -41,6 +34,12 @@ RoomManager
 	- NodeJS
 	- RoomManager
 
+REQUIREMENTS
+------------
+
+To install the required dependencies for the framework, it is necessary to be in the path of the project, and execute the following command.
+
+npm install
 
 LIBRARIES
 ---------
@@ -81,10 +80,10 @@ CONTACTS
       check to the GitHub repository
       https://github.com/JFVF/RM-API-Team1.git
 
-MAINTAINERS
------------
+CONTRIBUTORS
+------------
 
-Current maintainers:
+Current contributors:
  * Aldo Balderrama Vaca (mabalderramav) - https://github.com/mabalderramav
  * Jimmy Romero S. (JimmyRomero) - https://github.com/JimmyRomero
  * Ericka Viraca (ErickaViraca) - https://github.com/ErickaViraca
