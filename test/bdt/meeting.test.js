@@ -1,13 +1,20 @@
 var expect = require('chai').expect;
-var meeting = require('../../lib/meeting_lib/meetingLib.js');
-var config = require('../../config.json');
-var status = require('../../resources/status.json');
-var room = require('../../lib/room_lib/roomLib.js');
 var randomstring = require("randomstring");
-var length = 5;
-var startTime = 3;
-var endTime = 4;
 var moment = require("moment");
+/**Manager*/
+var requireManager = require('../../lib/manager_lib/requireManagerLib.js');
+var endPointManager = requireManager.getRequireEndPoinManager();
+var resourceManager = requireManager.getRequireResourceManager();
+/**Variables*/
+var meeting = endPointManager.getMeeting();
+var config = requireManager.getRequireConfig();
+var status = requireManager.getStatus();
+var room = endPointManager.getRoom();
+
+var length = 5;
+var startTime = 1;
+var endTime = 2;
+
 /*
  Feature: Meeting
 */
@@ -18,7 +25,7 @@ describe('Meeting Bdt Test:', function () {
      Scenario 1: Verify that you can not create meetings with a nonexistent account.
      Given I have a room.
      When I have a meeting into the room with a nonexistent account.
-     Then ensure that the meeting wasnt created 
+     Then ensure that the meeting wasnt created
      */
     context('Scenario 1: Verify that you can not create meetings with a nonexistent account.', function () {
         var roomObtenido = {};
@@ -26,7 +33,7 @@ describe('Meeting Bdt Test:', function () {
         var organizer = randomstring.generate({length: length, charset: 'alphabetic'});
         var title = randomstring.generate({length: length, charset: 'alphabetic'});
         var location = randomstring.generate({length: length, charset: 'alphabetic'});
-
+        
         it('Given I have a room', function (done){
             room.getRoomById(function(err, res){
                 roomObtenido = res.body;
@@ -47,7 +54,7 @@ describe('Meeting Bdt Test:', function () {
             };
             meeting.create(jsonPostMeeting, function (err, res) {
                 jsonPostMeeting = res.body;
-                expect(res.status).to.equal(status.OK);
+                expect(res.status).to.equal(status.UNAUTHORIZED);
                 done();
             });
         });
@@ -59,4 +66,5 @@ describe('Meeting Bdt Test:', function () {
         });
 
     });
+    
 });
